@@ -235,17 +235,18 @@ void Adafruit_BNO055::setAxisSign(adafruit_bno055_axis_remap_sign_t remapsign) {
 }
 
 /**
- * @brief Set the Axis Remap (3.4) Axis. Parameters should be either
- * REMAP_AXIS_X, REMAP_AXIS_Y or REMAP_AXIS_Z
+ * @brief Set the Axis Remap (3.4) Axis. Compared to the original function
+ * this function allows you to remap each axis to any desired axis
  * 
- * @param axis_x 
- * @param axis_y 
- * @param axis_z 
+ * @param axis_x axis to remap axis x to 
+ * @param axis_y axis to remap axis y to 
+ * @param axis_z axis to remap axis z to 
+ * @return byte final value read from BNO055_AXIS_MAP_CONFIG_ADDR
  */
-bool Adafruit_BNO055::setFullAxisRemap(adafruit_bn055_axis_remap_g axis_x,
-                      adafruit_bn055_axis_remap_g axis_y,
-                      adafruit_bn055_axis_remap_g axis_z,
-                      byte* read_res){
+byte Adafruit_BNO055::setFullAxisRemap(
+  adafruit_bn055_axis_remap_t axis_x,
+  adafruit_bn055_axis_remap_t axis_y,
+  adafruit_bn055_axis_remap_t axis_z){
   adafruit_bno055_opmode_t modeback = _mode;
 
   byte val = 0;
@@ -262,24 +263,21 @@ bool Adafruit_BNO055::setFullAxisRemap(adafruit_bn055_axis_remap_g axis_x,
   delay(20);
 
   byte reg_read = read8(BNO055_AXIS_MAP_CONFIG_ADDR) & 0x3F;
-  *read_res = reg_read;
-  
-  //Mask the last 6 bits
-  return reg_read == val;
+  return reg_read;
 }
 
 /**
- * @brief Set the Axis Remap (3.4) Sign. Parameters should be either 
- * REMAP_SIGN_POS (+) or REMAP_SIGN_NEG (-)
+ * @brief Set the Axis Remap (3.4) Sign For each axis
  * 
- * @param sign_x 
- * @param sign_y 
- * @param sign_z 
+ * @param sign_x sign to remap axis X to
+ * @param sign_y sign to remap axis Y to
+ * @param sign_z sign to remap axis Z to
+ * @return byte final value read from BNO055_AXIS_MAP_SIGN_ADDR
  */
-bool Adafruit_BNO055::setFullAxisSign(adafruit_bn055_axis_remap_g sign_x,
-                     adafruit_bn055_axis_remap_g sign_y,
-                     adafruit_bn055_axis_remap_g sign_z,
-                     byte* read_res){
+byte Adafruit_BNO055::setFullAxisSign(
+  adafruit_bn055_axis_sign_t sign_x,
+  adafruit_bn055_axis_sign_t sign_y,
+  adafruit_bn055_axis_sign_t sign_z){
   adafruit_bno055_opmode_t modeback = _mode;
 
   byte val = 0;
@@ -296,11 +294,7 @@ bool Adafruit_BNO055::setFullAxisSign(adafruit_bn055_axis_remap_g sign_x,
   delay(20);
 
   byte reg_read = read8(BNO055_AXIS_MAP_SIGN_ADDR) & 0x07;
-  *read_res = reg_read;
-  
-  //Mask the last 3 bits
-  return (reg_read == val);
-
+  return reg_read;
 }
 
 
@@ -325,6 +319,44 @@ void Adafruit_BNO055::setExtCrystalUse(boolean usextal) {
   /* Set the requested operating mode (see section 3.3) */
   setMode(modeback);
   delay(20);
+}
+
+/**
+ * @brief 
+ * 
+ * @param timeout_ms Timeout for checking the ST_MAIN_CLK bit. According to the
+ * datasheet it takes a minimum of ~600ms to configure and startup the BNO055
+ * @return true Set successful
+ * @return false Set not successful
+ */
+bool Adafruit_BNO055::setUseExtCrystal(uint32_t timeout_ms){
+  adafruit_bno055_opmode_t modeback = _mode;
+
+  /* Switch to config mode (just in case since this is the default) */
+  setMode(OPERATION_MODE_CONFIG);
+  delay(25);
+  write8(BNO055_PAGE_ID_ADDR, 0);
+  write8(BNO055_SYS_TRIGGER_ADDR, 0x80);
+
+  // Poll ST_MAIN_CLK in SYS_CLK_STATUS until its clear
+  byte sys_clk_status = 0x01;
+  uint32_t time_start_config = millis();
+
+  do{
+    byte clk_status = read8(BNO055_SYS_CLK_STAT_ADDR);
+    sys_clk_status = bitRead(clk_status,0);
+  }while((sys_clk_status!=0x00) & (millis()-time_start_config < timeout_ms));
+
+  byte sys_trig = read8(BNO055_SYS_TRIGGER_ADDR);
+  bool set_res = bitRead(sys_trig,7) == 0x01;
+
+
+  delay(10);
+  /* Set the requested operating mode (see section 3.3) */
+  setMode(modeback);
+  delay(20);
+  
+  return set_res;
 }
 
 /*!

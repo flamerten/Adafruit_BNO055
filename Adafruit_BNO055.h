@@ -74,15 +74,6 @@ typedef enum {
   OPERATION_MODE_NDOF = 0X0C
 } adafruit_bno055_opmode_t;
 
-typedef enum{
-  REMAP_AXIS_X = 0b00,
-  REMAP_AXIS_Y = 0b01,
-  REMAP_AXIS_Z = 0b10,
-
-  REMAP_SIGN_POS = 0,
-  REMAP_SIGN_NEG = 1
-} adafruit_bn055_axis_remap_g;
-
 /*!
  *  @brief  Class that stores state and functions for interacting with
  *          BNO055 Sensor
@@ -269,6 +260,17 @@ public:
     REMAP_SIGN_P7 = 0x05
   } adafruit_bno055_axis_remap_sign_t;
 
+  typedef enum{
+    REMAP_AXIS_X = 0b00,
+    REMAP_AXIS_Y = 0b01,
+    REMAP_AXIS_Z = 0b10,
+  } adafruit_bn055_axis_remap_t;
+
+  typedef enum{
+    REMAP_SIGN_POS = 0,
+    REMAP_SIGN_NEG = 1
+  } adafruit_bn055_axis_sign_t;
+
   /** A structure to represent revisions **/
   typedef struct {
     uint8_t accel_rev; /**< acceleration rev */
@@ -323,15 +325,15 @@ public:
   void enterSuspendMode();
   void enterNormalMode();
 
-  bool setFullAxisRemap(adafruit_bn055_axis_remap_g axis_x,
-                        adafruit_bn055_axis_remap_g axis_y,
-                        adafruit_bn055_axis_remap_g axis_z,
-                        byte* read_res);
+  byte setFullAxisRemap(adafruit_bn055_axis_remap_t axis_x,
+                        adafruit_bn055_axis_remap_t axis_y,
+                        adafruit_bn055_axis_remap_t axis_z);
   
-  bool setFullAxisSign(adafruit_bn055_axis_remap_g sign_x,
-                       adafruit_bn055_axis_remap_g sign_y,
-                       adafruit_bn055_axis_remap_g sign_z,
-                       byte* read_res);
+  byte setFullAxisSign(adafruit_bn055_axis_sign_t sign_x,
+                       adafruit_bn055_axis_sign_t sign_y,
+                       adafruit_bn055_axis_sign_t sign_z);
+
+  bool setUseExtCrystal(uint32_t timeout_ms = 800);
 
 private:
   byte read8(adafruit_bno055_reg_t);
