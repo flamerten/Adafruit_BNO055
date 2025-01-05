@@ -260,6 +260,17 @@ public:
     REMAP_SIGN_P7 = 0x05
   } adafruit_bno055_axis_remap_sign_t;
 
+  typedef enum {
+    REMAP_X_AXIS = 0b00,
+    REMAP_Y_AXIS = 0b01,
+    REMAP_Z_AXIS = 0b10,
+  } adafruit_bno055_remap_axis_t;
+
+  typedef enum {
+    REMAP_SIGN_POS = 0,
+    REMAP_SIGN_NEG = 1,
+  }adafruit_bno055_remap_sign_t;
+
   /** A structure to represent revisions **/
   typedef struct {
     uint8_t accel_rev; /**< acceleration rev */
@@ -287,6 +298,12 @@ public:
   adafruit_bno055_opmode_t getMode();
   void setAxisRemap(adafruit_bno055_axis_remap_config_t remapcode);
   void setAxisSign(adafruit_bno055_axis_remap_sign_t remapsign);
+  bool configureAxisRemap(adafruit_bno055_remap_axis_t x_axis,
+                          adafruit_bno055_remap_axis_t y_axis,
+                          adafruit_bno055_remap_axis_t z_axis);
+  bool configureAxisSign(adafruit_bno055_remap_sign_t x_sign,
+                         adafruit_bno055_remap_sign_t y_sign,
+                         adafruit_bno055_remap_sign_t z_sign);
   void getRevInfo(adafruit_bno055_rev_info_t *);
   void setExtCrystalUse(boolean usextal);
   void getSystemStatus(uint8_t *system_status, uint8_t *self_test_result,
