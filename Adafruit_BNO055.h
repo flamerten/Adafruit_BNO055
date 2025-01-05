@@ -260,12 +260,14 @@ public:
     REMAP_SIGN_P7 = 0x05
   } adafruit_bno055_axis_remap_sign_t;
 
+  /** Axis Remap Enums **/
   typedef enum {
     REMAP_X_AXIS = 0b00,
     REMAP_Y_AXIS = 0b01,
     REMAP_Z_AXIS = 0b10,
   } adafruit_bno055_remap_axis_t;
 
+  /** Axis Sign Enums**/
   typedef enum {
     REMAP_SIGN_POS = 0,
     REMAP_SIGN_NEG = 1,
@@ -327,7 +329,7 @@ public:
   void setSensorOffsets(const adafruit_bno055_offsets_t &offsets_type);
   bool isFullyCalibrated();
 
-  /* Power managments functions */
+  /* Power management functions */
   void enterSuspendMode();
   void enterNormalMode();
 
