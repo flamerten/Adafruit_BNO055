@@ -269,7 +269,7 @@ public:
   typedef enum {
     REMAP_SIGN_POS = 0,
     REMAP_SIGN_NEG = 1,
-  }adafruit_bno055_remap_sign_t;
+  } adafruit_bno055_remap_sign_t;
 
   /** A structure to represent revisions **/
   typedef struct {

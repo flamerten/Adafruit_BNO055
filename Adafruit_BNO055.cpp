@@ -236,18 +236,17 @@ void Adafruit_BNO055::setAxisSign(adafruit_bno055_axis_remap_sign_t remapsign) {
 
 /*!
  * @brief Configure the axis of the device to a new reference axis
- * 
- * @param x_axis 
+ * @param x_axis
  *        axis to remap x_axis to
- * @param y_axis 
+ * @param y_axis
  *        axis to remap y_axis to
- * @param z_axis 
+ * @param z_axis
  *        axis to remap z_axis to
  * @return true if new axis configuration valid
  */
 bool Adafruit_BNO055::configureAxisRemap(adafruit_bno055_remap_axis_t x_axis,
                                          adafruit_bno055_remap_axis_t y_axis,
-                                         adafruit_bno055_remap_axis_t z_axis){
+                                         adafruit_bno055_remap_axis_t z_axis) {
   adafruit_bno055_opmode_t modeback = _mode;
 
   byte write_val = 0;
@@ -269,18 +268,17 @@ bool Adafruit_BNO055::configureAxisRemap(adafruit_bno055_remap_axis_t x_axis,
 
 /*!
  * @brief Configure the signs of the device's reference axis
- * 
- * @param x_sign 
+ * @param x_sign
  *        sign to set the x_axis to
- * @param y_sign 
+ * @param y_sign
  *        sign to set the y_axis to
- * @param z_sign 
+ * @param z_sign
  *        sign to set the z_axis to
  * @return true if sign configuration is valid
  */
 bool Adafruit_BNO055::configureAxisSign(adafruit_bno055_remap_sign_t x_sign,
                                         adafruit_bno055_remap_sign_t y_sign,
-                                        adafruit_bno055_remap_sign_t z_sign){
+                                        adafruit_bno055_remap_sign_t z_sign) {
   adafruit_bno055_opmode_t modeback = _mode;
 
   byte write_val = 0;
@@ -299,7 +297,6 @@ bool Adafruit_BNO055::configureAxisSign(adafruit_bno055_remap_sign_t x_sign,
 
   return (read8(BNO055_AXIS_MAP_SIGN_ADDR) == write_val);
 }
-
 
 /*!
  *  @brief  Use the external 32.768KHz crystal
