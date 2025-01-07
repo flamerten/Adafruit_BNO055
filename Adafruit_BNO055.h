@@ -226,7 +226,14 @@ public:
     ACCEL_RADIUS_LSB_ADDR = 0X67,
     ACCEL_RADIUS_MSB_ADDR = 0X68,
     MAG_RADIUS_LSB_ADDR = 0X69,
-    MAG_RADIUS_MSB_ADDR = 0X6A
+    MAG_RADIUS_MSB_ADDR = 0X6A,
+
+    /* PAGE 1 Registers*/
+    BNO055_ACC_CONFIG = 0X08,
+    BNO055_MAG_CONFIG = 0X09,
+    BNO055_GYR_CONFIG_0 = 0X0A,
+    BNO055_GYR_CONFIG_1 = 0X0B
+
   } adafruit_bno055_reg_t;
 
   /** BNO055 power settings */
@@ -292,6 +299,13 @@ public:
     VECTOR_GRAVITY = BNO055_GRAVITY_DATA_X_LSB_ADDR
   } adafruit_vector_type_t;
 
+  typedef enum {
+    RANGE_2G = 0b00,
+    RANGE_4G = 0b01,
+    RANGE_8G = 0b10,
+    RANGE_16G = 0b11,
+  } adafruit_accel_range_t;
+
   Adafruit_BNO055(int32_t sensorID = -1, uint8_t address = BNO055_ADDRESS_A,
                   TwoWire *theWire = &Wire);
 
@@ -332,6 +346,9 @@ public:
   /* Power management functions */
   void enterSuspendMode();
   void enterNormalMode();
+
+  /* Configuration Functions */
+  void configAccRange(adafruit_accel_range_t range);
 
 private:
   byte read8(adafruit_bno055_reg_t);

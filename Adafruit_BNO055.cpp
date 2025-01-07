@@ -904,6 +904,24 @@ void Adafruit_BNO055::enterNormalMode() {
   delay(20);
 }
 
+void Adafruit_BNO055::configAccRange(adafruit_accel_range_t range)
+{
+  adafruit_bno055_opmode_t modeback = _mode;
+
+  setMode(OPERATION_MODE_CONFIG);
+  delay(25);
+  write8(BNO055_PAGE_ID_ADDR, 1);
+  delay(10);
+  byte accel_config = read8(BNO055_ACC_CONFIG);
+  write8(BNO055_ACC_CONFIG, accel_config | range);
+
+  /* Set the requested operating mode (see section 3.3) */
+  write8(BNO055_PAGE_ID_ADDR, 0);
+  delay(10);
+  setMode(modeback);
+  delay(20);
+}
+
 /*!
  *  @brief  Writes an 8 bit value over I2C
  */
